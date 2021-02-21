@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image_news_feed"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:layout_margin="@dimen/_8sdp"
+        android:src="@drawable/ic_profile"
+        app:civ_border_color="@color/black"
+        app:civ_border_width="@dimen/_1sdp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/profile_name_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintBottom_toBottomOf="@id/profile_image_news_feed"
+        app:layout_constraintStart_toEndOf="@id/profile_image_news_feed"
+        app:layout_constraintTop_toTopOf="@id/profile_image_news_feed" />
+
+    <FrameLayout
+        android:id="@+id/image_video_news_feed"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_150sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_news_feed">
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/profile_viewPage_news_feed"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_150sdp"
+            android:text="Hello World!"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profile_image_news_feed" />
+
+        <VideoView
+            android:id="@+id/profile_video_news_feed"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_150sdp"
+            android:visibility="visible" />
+
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/profile_like_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:src="@drawable/ic_like"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/image_video_news_feed"
+        app:tint="@color/black" />
+
+    <ImageView
+        android:id="@+id/profile_message_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:rotation="270"
+        android:src="@drawable/ic_message"
+        app:layout_constraintStart_toEndOf="@id/profile_like_news_feed"
+        app:layout_constraintTop_toBottomOf="@id/image_video_news_feed" />
+
+    <ImageView
+        android:id="@+id/profile_share_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_12sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:src="@drawable/ic_send"
+        app:layout_constraintStart_toEndOf="@id/profile_message_news_feed"
+        app:layout_constraintTop_toBottomOf="@id/image_video_news_feed" />
+
+    <TextView
+        android:id="@+id/profile_like_count_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:text="@string/profileCount"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintStart_toStartOf="@id/profile_like_news_feed"
+        app:layout_constraintTop_toBottomOf="@id/profile_like_news_feed" />
+
+    <TextView
+        android:id="@+id/profile_like_text_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_4sdp"
+        android:text="@string/like"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintStart_toEndOf="@id/profile_like_count_news_feed"
+        app:layout_constraintTop_toTopOf="@id/profile_like_count_news_feed" />
+
+    <TextView
+        android:id="@+id/profile_name_comment_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/profile_like_count_news_feed"
+        app:layout_constraintTop_toBottomOf="@id/profile_like_count_news_feed" />
+
+    <TextView
+        android:id="@+id/profile_comments_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="19"
+        android:justificationMode="inter_word"
+        android:text="@string/dummy_text"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:textStyle="normal"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_11ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_name_comment_news_feed"
+        app:layout_constraintTop_toTopOf="@id/profile_name_comment_news_feed"
+        tools:ignore="UnusedAttribute" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
