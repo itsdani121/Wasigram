@@ -2,25 +2,36 @@ package com.example.wasigram;
 
 public class newsFeedModel {
     String image;
-    String[] viewImg;
+    String viewImg;
     String titleName;
-    String[] video;
+    String video;
     String like;
-    public newsFeedModel(String image, String[] viewImg, String titleName, String[] video, String like) {
+    String Descrption;
+
+    public newsFeedModel(String image, String titleName, String video, String like, String descrption) {
         this.image = image;
-        this.viewImg = viewImg;
         this.titleName = titleName;
         this.video = video;
         this.like = like;
+        Descrption = descrption;
     }
+
     public newsFeedModel() {
     }
 
-    public String[] getViewImg() {
+    public String getDescription() {
+        return Descrption;
+    }
+
+    public void setDescrption(String descrption) {
+        Descrption = descrption;
+    }
+
+    public String getViewImg() {
         return viewImg;
     }
 
-    public void setViewImg(String[] viewImg) {
+    public void setViewImg(String viewImg) {
         this.viewImg = viewImg;
     }
 
@@ -49,11 +60,11 @@ public class newsFeedModel {
     }
 
 
-    public String[] getVideo() {
+    public String getVideo() {
         return video;
     }
 
-    public void setVideo(String[] video) {
+    public void setVideo(String video) {
         this.video = video;
     }
 }

@@ -1,31 +1,34 @@
 package com.example.wasigram;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.common.Priority;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONArrayRequestListener;
 import com.example.wasigram.databinding.ActivityMainBinding;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding mainBinding;
     Toolbar toolbar;
-    String[] images = {"https://www.pexels.com/photo/ornamental-window-bars-in-small-room-5029306/", "https://www.pexels.com/photo/white-car-on-snow-covered-road-6704324/", "https://www.pexels.com/photo/new-complex-of-contemporary-skyscrapers-in-downtown-4394112/"};
-    String[] video = {"https://www.pexels.com/video/couple-cigarette-smoke-lifestyle-6531148/", "https://www.pexels.com/video/pamukkale-6047896/"};
-
-    List<newsFeedModel> feedModel = new ArrayList<>();
-    newsFeedImageAdapter imageAdapter;
+    String JSON_URl = "http://192.168.1.9/wasigram/";
+    Database database;
+    List<newsFeedModel> feedModels = new ArrayList<>();
+    newsFeedAdapter imageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,31 +38,57 @@ public class MainActivity extends AppCompatActivity {
         toolbar = findViewById(R.id.mews_feed_toolbar);
         toolbar.setTitle("NewsFeed");
         toolbar.setTitleTextColor(Color.WHITE);
+        showList();
+    }
 
-        initRef();
+    void showList() {
+        AndroidNetworking.get(JSON_URl)
+                .setPriority(Priority.LOW)
+                .build()
+                .getAsJSONArray(new JSONArrayRequestListener() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        // do anything with response
+                        if (response != null) {
+                            for (int i = 0; i < response.length(); i++) {
+                                try {
+                                    JSONObject object = response.getJSONObject(i);
+                                    newsFeedModel FeedModel = new newsFeedModel();
+                                    FeedModel.setTitleName(object.getString("account_name"));
+                                    String name = object.getString("account_name");
+                                    FeedModel.setLike(object.getString("likes"));
+                                    FeedModel.setDescrption(object.getString("media_type"));
+                                    feedModels.add(FeedModel);
+                                    Log.d("TAG", "onResponse: "+ name);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                            imageADD(feedModels);
+                        } else {
+                            Toast.makeText(MainActivity.this, "None ", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError error) {
+                        // handle error
+                        Toast.makeText(MainActivity.this, "No Value " + error.getErrorBody(), Toast.LENGTH_SHORT).show();
+                        Log.d("TAG", "onError: " + error);
+                    }
+                });
     }
 
     void imageADD(List<newsFeedModel> feedModel) {
-        imageAdapter = new newsFeedImageAdapter(this, feedModel);
+        imageAdapter = new newsFeedAdapter(this, feedModel);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setSmoothScrollbarEnabled(true);
         imageAdapter.notifyDataSetChanged();
         mainBinding.newsFeedRecycler.setAdapter(imageAdapter);
         mainBinding.newsFeedRecycler.setHasFixedSize(true);
         mainBinding.newsFeedRecycler.setLayoutManager(manager);
-    }
-
-    void initRef() {
-
-        for (int i = 0; i < 10; i++) {
-            String likes = String.valueOf(i);
-            String image = String.valueOf(R.drawable.ic_profile);
-            String title = "Title " + i;
-            newsFeedModel model = new newsFeedModel(image, images, title, video, likes);
-            feedModel.add(model);
-        }
-
-        imageADD(feedModel);
     }
 
 }
