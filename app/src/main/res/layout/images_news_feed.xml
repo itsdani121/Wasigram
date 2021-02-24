@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,10 +10,10 @@
         android:layout_width="@dimen/_40sdp"
         android:layout_height="@dimen/_40sdp"
         android:layout_margin="@dimen/_8sdp"
+        android:drawableTint="@color/black"
         android:src="@drawable/ic_profile"
         app:civ_border_color="@color/black"
         app:civ_border_width="@dimen/_1sdp"
-        android:drawableTint="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,7 +32,8 @@
     <ImageView
         android:id="@+id/profile_image_viewPage_news_feed"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_150sdp"
+        android:layout_height="@dimen/_300sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         android:text="Hello World!"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -90,6 +90,7 @@
         android:text="@string/like"
         android:textColor="@color/black"
         android:textSize="@dimen/_11ssp"
+        app:layout_constraintEnd_toEndOf="@id/profile_image_message_news_feed"
         app:layout_constraintStart_toEndOf="@id/profile_image_like_count_news_feed"
         app:layout_constraintTop_toTopOf="@id/profile_image_like_count_news_feed" />
 

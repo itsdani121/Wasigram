@@ -32,22 +32,31 @@
     <FrameLayout
         android:id="@+id/profile_video_video_news_feed"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="@dimen/_300sdp"
+        android:layout_marginTop="@dimen/_8sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_video_image_news_feed">
 
-        <com.allattentionhere.autoplayvideos.AAH_VideoImage
+        <com.google.android.exoplayer2.ui.PlayerView
+            android:id="@+id/item_video_exoplayer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            app:resize_mode="fill"
+            app:surface_type="texture_view"
+            app:use_controller="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <ImageView
+      <!--  <ImageView
             android:id="@+id/img_vol"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right|bottom"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_unmute" />
+            android:src="@drawable/ic_unmute" />-->
     </FrameLayout>
 
     <ImageView
@@ -101,6 +110,7 @@
         android:text="@string/like"
         android:textColor="@color/black"
         android:textSize="@dimen/_11ssp"
+        app:layout_constraintEnd_toEndOf="@id/profile_video_name_comment_news_feed"
         app:layout_constraintStart_toEndOf="@id/profile_video_like_count_news_feed"
         app:layout_constraintTop_toTopOf="@id/profile_video_like_count_news_feed" />
 
