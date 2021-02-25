@@ -2,7 +2,6 @@ package com.example.wasigram;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,24 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.exoplayer2.DefaultLoadControl;
-import com.google.android.exoplayer2.ExoPlayerFactory;
-import com.google.android.exoplayer2.PlaybackParameters;
-import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.audio.AudioAttributes;
-import com.google.android.exoplayer2.audio.AudioListener;
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
-import com.google.android.exoplayer2.extractor.ExtractorsFactory;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 
 import java.util.List;
 
@@ -40,19 +23,16 @@ public class newsFeedAdapter extends RecyclerView.Adapter {
     public static final int videoFeed = 1;
     public SimpleExoPlayer exoPlayer;
     Context context;
+    videoCallBack callBack;
     List<newsFeedModel> feedModels;
-    String[] images;
+    videoNewsFeed videoNews;
+
     String Json_Url = "https://wasisoft.com/dev/";
 
-    public newsFeedAdapter(Context context, List<newsFeedModel> feedModels, String[] images) {
+    public newsFeedAdapter(Context context, List<newsFeedModel> feedModels, videoCallBack callBack) {
         this.context = context;
         this.feedModels = feedModels;
-        this.images = images;
-    }
-
-    public newsFeedAdapter(Context context, List<newsFeedModel> feedModels) {
-        this.context = context;
-        this.feedModels = feedModels;
+        this.callBack = callBack;
     }
 
     public newsFeedAdapter() {
@@ -90,26 +70,12 @@ public class newsFeedAdapter extends RecyclerView.Adapter {
 
         } else {
 
-            newsFeedModel model = feedModels.get(position);
-            videoNewsFeed videoNews = (videoNewsFeed) holder;
+           newsFeedModel model = feedModels.get(position);
+            videoNews = (videoNewsFeed) holder;
             videoNews.videoLikes.setText(model.getLike());
             videoNews.videoTitle.setText(model.getTitleName());
             videoNews.videoDescription.setText(model.getDescription());
-            videoPlayBack(videoNews.videoView, Uri.parse(Json_Url + model.getVideo()));
-
-            ((videoNewsFeed) holder).videoView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
-                @Override
-                public void onViewAttachedToWindow(View v) {
-
-                }
-
-                @Override
-                public void onViewDetachedFromWindow(View v) {
-                    videoNews.videoView.setPlayer(null);
-                    exoPlayer.release();
-
-                }
-            });
+            callBack.onSuccessPlay(videoNews.videoView, Uri.parse(Json_Url + model.getVideo()), position);
         }
     }
 
@@ -126,24 +92,26 @@ public class newsFeedAdapter extends RecyclerView.Adapter {
         return feedModels.size();
     }
 
-    void videoPlayBack(PlayerView player, Uri videoUrl) {
-        BandwidthMeter meter = new DefaultBandwidthMeter();
-        TrackSelector track = new DefaultTrackSelector(
-                new AdaptiveTrackSelection.Factory(meter)
-        );
-        exoPlayer = ExoPlayerFactory.newSimpleInstance(context, track);
-        DefaultHttpDataSourceFactory factory = new DefaultHttpDataSourceFactory("video");
-        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
-        MediaSource mediaSource = new ExtractorMediaSource(videoUrl, factory, extractorsFactory, null, null);
-        player.setPlayer(exoPlayer);
-        player.setKeepScreenOn(true);
 
-        exoPlayer.prepare(mediaSource);
-        exoPlayer.setPlayWhenReady(true);
-        player.setUseController(true);
-
-
+    public void releasePlayer() {
+        if (exoPlayer != null) {
+            videoNews.videoView.setPlayer(null);
+            exoPlayer.setPlayWhenReady(true);
+            exoPlayer.getPlaybackState();
+            exoPlayer.release();
+            exoPlayer = null;
+        }
     }
+
+    public void pausePlayer() {
+        if (exoPlayer != null) {
+            videoNews.videoView.setPlayer(null);
+            exoPlayer.setPlayWhenReady(false);
+            exoPlayer.getPlaybackState();
+        }
+    }
+
+
 
     public static class imageNewsFeed extends RecyclerView.ViewHolder {
         ImageView dpImage, viewPager;
