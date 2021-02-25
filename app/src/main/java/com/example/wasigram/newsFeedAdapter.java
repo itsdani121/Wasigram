@@ -2,6 +2,7 @@ package com.example.wasigram;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.audio.AudioAttributes;
+import com.google.android.exoplayer2.audio.AudioListener;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
@@ -34,10 +38,10 @@ import java.util.List;
 public class newsFeedAdapter extends RecyclerView.Adapter {
     public static final int imageFeed = 0;
     public static final int videoFeed = 1;
+    public SimpleExoPlayer exoPlayer;
     Context context;
     List<newsFeedModel> feedModels;
     String[] images;
-    videoCallBack callBack;
     String Json_Url = "https://wasisoft.com/dev/";
 
     public newsFeedAdapter(Context context, List<newsFeedModel> feedModels, String[] images) {
@@ -46,10 +50,12 @@ public class newsFeedAdapter extends RecyclerView.Adapter {
         this.images = images;
     }
 
-    public newsFeedAdapter(Context context, List<newsFeedModel> feedModels, videoCallBack callBack) {
+    public newsFeedAdapter(Context context, List<newsFeedModel> feedModels) {
         this.context = context;
         this.feedModels = feedModels;
-        this.callBack = callBack;
+    }
+
+    public newsFeedAdapter() {
     }
 
     @NonNull
@@ -89,7 +95,21 @@ public class newsFeedAdapter extends RecyclerView.Adapter {
             videoNews.videoLikes.setText(model.getLike());
             videoNews.videoTitle.setText(model.getTitleName());
             videoNews.videoDescription.setText(model.getDescription());
-            callBack.onSuccessPlay(videoNews.videoView,Uri.parse(Json_Url + model.getVideo()));
+            videoPlayBack(videoNews.videoView, Uri.parse(Json_Url + model.getVideo()));
+
+            ((videoNewsFeed) holder).videoView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                @Override
+                public void onViewAttachedToWindow(View v) {
+
+                }
+
+                @Override
+                public void onViewDetachedFromWindow(View v) {
+                    videoNews.videoView.setPlayer(null);
+                    exoPlayer.release();
+
+                }
+            });
         }
     }
 
@@ -106,8 +126,24 @@ public class newsFeedAdapter extends RecyclerView.Adapter {
         return feedModels.size();
     }
 
+    void videoPlayBack(PlayerView player, Uri videoUrl) {
+        BandwidthMeter meter = new DefaultBandwidthMeter();
+        TrackSelector track = new DefaultTrackSelector(
+                new AdaptiveTrackSelection.Factory(meter)
+        );
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(context, track);
+        DefaultHttpDataSourceFactory factory = new DefaultHttpDataSourceFactory("video");
+        ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
+        MediaSource mediaSource = new ExtractorMediaSource(videoUrl, factory, extractorsFactory, null, null);
+        player.setPlayer(exoPlayer);
+        player.setKeepScreenOn(true);
+
+        exoPlayer.prepare(mediaSource);
+        exoPlayer.setPlayWhenReady(true);
+        player.setUseController(true);
 
 
+    }
 
     public static class imageNewsFeed extends RecyclerView.ViewHolder {
         ImageView dpImage, viewPager;
@@ -124,7 +160,7 @@ public class newsFeedAdapter extends RecyclerView.Adapter {
     }
 
     public static class videoNewsFeed extends RecyclerView.ViewHolder {
-        PlayerView videoView;
+        public PlayerView videoView;
         TextView videoTitle, videoLikes, videoDescription;
 
         public videoNewsFeed(@NonNull View itemView) {
@@ -135,4 +171,5 @@ public class newsFeedAdapter extends RecyclerView.Adapter {
             videoDescription = itemView.findViewById(R.id.profile_video_comments_news_feed);
         }
     }
+
 }

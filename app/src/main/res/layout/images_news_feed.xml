@@ -35,6 +35,7 @@
         android:layout_height="@dimen/_300sdp"
         android:layout_marginTop="@dimen/_8sdp"
         android:text="Hello World!"
+        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_image_images_news_feed" />
