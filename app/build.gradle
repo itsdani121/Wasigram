@@ -12,13 +12,13 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -40,14 +40,17 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    // RecyclerView
+    //noinspection GradleCompatible
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.intuit.sdp:sdp-android:1.0.6' // for sdp lib
     implementation 'com.intuit.ssp:ssp-android:1.0.6' // for ssp lib
     implementation 'de.hdodenhof:circleimageview:3.1.0' // for circular image
     implementation 'com.github.bumptech.glide:glide:4.12.0'// for glide image
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
-    implementation 'im.ene.toro3:toro:3.7.0.2010003'
-    implementation 'im.ene.toro3:toro-ext-exoplayer:3.7.0.2010003' // for auto video player
+    // for auto video player
     implementation 'com.google.android.exoplayer:exoplayer:2.10.5'
+    implementation 'com.arthurivanets.arvi:arvi:1.2.0'
     implementation 'com.amitshekhar.android:android-networking:1.0.2' // for database FAN lib
     //Ribbon View
     implementation "com.github.skydoves:androidribbon:1.0.3"

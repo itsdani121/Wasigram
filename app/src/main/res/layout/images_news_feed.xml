@@ -32,7 +32,7 @@
     <ImageView
         android:id="@+id/profile_image_viewPage_news_feed"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_300sdp"
+        android:layout_height="@dimen/_350sdp"
         android:layout_marginTop="@dimen/_8sdp"
         android:text="Hello World!"
         android:scaleType="centerCrop"
