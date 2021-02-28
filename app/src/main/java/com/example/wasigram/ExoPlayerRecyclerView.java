@@ -8,37 +8,33 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
-import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
-import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.BandwidthMeter;
 import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
@@ -52,7 +48,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     String Json_Url = "https://wasisoft.com/dev/";
     /**
      * PlayerViewHolder UI component
-     *
+     * <p>
      * Watch PlayerViewHolder class
      */
     private ImageView mediaCoverImage, volumeControl;
@@ -61,6 +57,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private FrameLayout mediaContainer;
     private PlayerView videoSurfaceView;
     private SimpleExoPlayer videoPlayer;
+    private boolean firstTime = true;
     /**
      * variable declaration
      */
@@ -70,6 +67,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private int screenDefaultHeight = 0;
     private Context context;
     private int playPosition = -1;
+    private int position;
     private boolean isVideoViewAdded;
     private RequestManager requestManager;
     // controlling volume state
@@ -93,19 +91,17 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         Point point = new Point();
         display.getSize(point);
 
-        videoSurfaceDefaultHeight = point.x;
+        // videoSurfaceDefaultHeight = point.x;
         screenDefaultHeight = point.y;
         videoSurfaceView = new PlayerView(this.context);
-       videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_ZOOM);
+        videoSurfaceView.setResizeMode(AspectRatioFrameLayout.RESIZE_MODE_FILL);
 
-        BandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
-        TrackSelection.Factory videoTrackSelectionFactory =
-                new AdaptiveTrackSelection.Factory(bandwidthMeter);
-        TrackSelector trackSelector =
-                new DefaultTrackSelector(videoTrackSelectionFactory);
+        DefaultTrackSelector trackSelector = new DefaultTrackSelector();
+        trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd());
 
         //Create the player using ExoPlayerFactory
         videoPlayer = ExoPlayerFactory.newSimpleInstance(context, trackSelector);
+        videoPlayer.setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
         // Disable Player Control
         videoSurfaceView.setUseController(false);
         // Bind the player to the view.
@@ -119,12 +115,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 super.onScrollStateChanged(recyclerView, newState);
 
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    if (mediaCoverImage != null) {
-                        // show the old thumbnail
-                        mediaCoverImage.setVisibility(VISIBLE);
-                    }
-
-                    // There's a special case when the end of the list has been reached.
                     // Need to handle that with this bit of logic
                     if (!recyclerView.canScrollVertically(1)) {
                         playVideo(true);
@@ -134,9 +124,21 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 }
             }
 
+
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
+                if (firstTime) {
+                    firstTime = false;
+                    recyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            playVideo(false);
+                            recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                    });
+                }
+
             }
         });
 
@@ -157,22 +159,22 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         videoPlayer.addListener(new Player.EventListener() {
             @Override
             public void onTimelineChanged(Timeline timeline, @Nullable Object manifest, int reason) {
-                Log.d(TAG, "onTimelineChanged: "+timeline);
-                Log.d(TAG, "onTimelineChanged: "+manifest);
-                Log.d(TAG, "onTimelineChanged: "+reason);
+                Log.d(TAG, "onTimelineChanged: " + timeline);
+                Log.d(TAG, "onTimelineChanged: " + manifest);
+                Log.d(TAG, "onTimelineChanged: " + reason);
             }
 
             @Override
             public void onTracksChanged(TrackGroupArray trackGroups,
                                         TrackSelectionArray trackSelections) {
-                Log.d(TAG, "onTracksChanged: "+trackGroups);
-                Log.d(TAG, "onTracksChanged: "+trackSelections);
+                Log.d(TAG, "onTracksChanged: " + trackGroups);
+                Log.d(TAG, "onTracksChanged: " + trackSelections);
             }
 
             @Override
             public void onLoadingChanged(boolean isLoading) {
-                Log.d(TAG, "onLoadingChanged: "+isLoading);
-                if (!isLoading){
+                Log.d(TAG, "onLoadingChanged: " + isLoading);
+                if (!isLoading) {
                     playVideo(true);
                 }
             }
@@ -200,7 +202,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                         if (progressBar != null) {
                             progressBar.setVisibility(GONE);
                         }
-                        if(!isVideoViewAdded){
+                        if (!isVideoViewAdded) {
                             addVideoView();
                         }
                         break;
@@ -211,7 +213,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
             @Override
             public void onRepeatModeChanged(int repeatMode) {
-                Log.d(TAG, "onRepeatModeChanged: "+repeatMode);
+                Log.d(TAG, "onRepeatModeChanged: " + repeatMode);
             }
 
             @Override
@@ -221,17 +223,17 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-                Log.d(TAG, "onPlayerError: "+error);
+                Log.d(TAG, "onPlayerError: " + error);
             }
 
             @Override
             public void onPositionDiscontinuity(int reason) {
-                Log.d(TAG, "onPositionDiscontinuity: "+reason);
+                Log.d(TAG, "onPositionDiscontinuity: " + reason);
             }
 
             @Override
             public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
-                Log.d(TAG, "onPlaybackParametersChanged: "+ playbackParameters);
+                Log.d(TAG, "onPlaybackParametersChanged: " + playbackParameters);
             }
 
             @Override
@@ -244,7 +246,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     public void playVideo(boolean isEndOfList) {
 
         int targetPosition;
-
         if (!isEndOfList) {
             int startPosition = ((LinearLayoutManager) Objects.requireNonNull(getLayoutManager())).findFirstVisibleItemPosition();
             int endPosition = ((LinearLayoutManager) getLayoutManager()).findLastVisibleItemPosition();
@@ -253,6 +254,8 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             if (endPosition - startPosition > 1) {
                 endPosition = startPosition + 1;
             }
+            Log.d(TAG, "playVideo: " + startPosition);
+            Log.d(TAG, "playVideo: " + endPosition);
             // something is wrong. return.
             if (startPosition < 0 || endPosition < 0) {
                 return;
@@ -271,8 +274,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             targetPosition = mediaObjects.size() - 1;
         }
 
-        Log.d(TAG, "playVideo: target position: " + targetPosition);
-
         // video is already playing so return
         if (targetPosition == playPosition) {
             return;
@@ -283,14 +284,12 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         if (videoSurfaceView == null) {
             return;
         }
-      // remove any old surface views from previously playing videos
+        // remove any old surface views from previously playing videos
         videoSurfaceView.setVisibility(INVISIBLE);
-       removeVideoView(videoSurfaceView);
+        removeVideoView(videoSurfaceView);
 
 
-        int currentPosition =
-                targetPosition - ((LinearLayoutManager) Objects.requireNonNull(
-                        getLayoutManager())).findFirstVisibleItemPosition();
+        int currentPosition = targetPosition - ((LinearLayoutManager) Objects.requireNonNull(getLayoutManager())).findFirstVisibleItemPosition();
 
         View child = getChildAt(currentPosition);
         if (child == null) {
@@ -299,13 +298,13 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
         videoNewsFeed holder = (videoNewsFeed) child.getTag();
         if (holder == null) {
-           playPosition = -1;
+            playPosition = -1;
             return;
         }
         viewHolderParent = holder.itemView;
-        videoSurfaceView = holder.videoView;
         requestManager = holder.requestManager;
         volumeControl = holder.volumeControl;
+        position = holder.pos;
         mediaContainer = holder.itemView.findViewById(R.id.item_video_exoplayer);
 
         videoSurfaceView.setPlayer(videoPlayer);
@@ -315,9 +314,9 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                 context, Util.getUserAgent(context, AppName));
         String mediaUrl = mediaObjects.get(targetPosition).getVideo();
         if (mediaUrl != null) {
-            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
+            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(Json_Url + mediaUrl));
-            videoPlayer.prepare(videoSource);
+            videoPlayer.prepare(videoSource,true,true);
             videoPlayer.setPlayWhenReady(true);
         }
     }
@@ -363,7 +362,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
     private void addVideoView() {
 
-       mediaContainer.addView(videoSurfaceView);
+        mediaContainer.addView(videoSurfaceView);
         isVideoViewAdded = true;
         videoSurfaceView.requestFocus();
         videoSurfaceView.setVisibility(VISIBLE);
@@ -375,10 +374,21 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         if (isVideoViewAdded) {
             removeVideoView(videoSurfaceView);
             playPosition = -1;
-            videoSurfaceView.setVisibility(VISIBLE);
+            videoSurfaceView.setVisibility(INVISIBLE);
             //mediaCoverImage.setVisibility(VISIBLE);
         }
     }
+
+    public void pausePlayer() {
+        if (videoPlayer != null) videoPlayer.setPlayWhenReady(false);
+    }
+
+    public int setPlayPosition() {
+        Log.d("TAG", "setPlayPosition: "+position);
+
+        return (int) videoPlayer.getCurrentPosition();
+    }
+
 
     public void releasePlayer() {
 
@@ -388,12 +398,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         }
 
         viewHolderParent = null;
-    }
-
-    public void onPausePlayer() {
-        if (videoPlayer != null) {
-            videoPlayer.stop(true);
-        }
     }
 
     private void toggleVolume() {
@@ -407,12 +411,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             }
         }
     }
-
-    //public void onRestartPlayer() {
-    //  if (videoPlayer != null) {
-    //   playVideo(true);
-    //  }
-    //}
 
     private void setVolumeControl(VolumeState state) {
         volumeState = state;

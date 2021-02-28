@@ -35,6 +35,9 @@
         android:id="@+id/item_video_exoplayer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_350sdp"
+        android:visibility="visible"
+        android:background="#b4b4b4b4"
+        android:scaleType="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -120,7 +123,7 @@
     <TextView
         android:id="@+id/profile_video_comments_news_feed"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/_50sdp"
         android:ellipsize="end"
         android:ems="19"
         android:justificationMode="inter_word"

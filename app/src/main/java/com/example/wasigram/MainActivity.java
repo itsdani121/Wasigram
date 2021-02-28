@@ -8,8 +8,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.PagerSnapHelper;
-import androidx.recyclerview.widget.SnapHelper;
+import androidx.recyclerview.widget.LinearSnapHelper;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -64,10 +63,8 @@ public class MainActivity extends AppCompatActivity {
                                     FeedModel.setLike(object.getString("likes"));
                                     FeedModel.setDescrption(object.getString("media_type"));
                                     FeedModel.setVideo(object.getString("media"));
-                                    FeedModel.setViewImg(object.getString("media"));
+                                    // FeedModel.setViewImg(object.getString("media"));
                                     feedModels.add(FeedModel);
-                                    String res = object.getString("media");
-                                    Log.d("TAG", "onResponse: " + res);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -83,13 +80,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onError(ANError error) {
                         // handle error
                         Toast.makeText(MainActivity.this, "No Value " + error.getErrorBody(), Toast.LENGTH_SHORT).show();
-                        Log.d("TAG", "onError: " + error);
                     }
                 });
     }
 
     void imageADD(ArrayList<newsFeedModel> feedModel) {
-        SnapHelper snapHelper = new PagerSnapHelper();
+        LinearSnapHelper snapHelper = new SnapHelperOneByOne();
         snapHelper.attachToRecyclerView(mRecyclerView);
         //set data object
         mRecyclerView.setMediaObjects(feedModel);
@@ -99,8 +95,10 @@ public class MainActivity extends AppCompatActivity {
         imageAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(imageAdapter);
         mRecyclerView.setHasFixedSize(true);
+        int setLocation = mRecyclerView.setPlayPosition();
+        Log.d("TAG", "imageADD: " + setLocation);
         mRecyclerView.setLayoutManager(manager);
-
+        imageAdapter.notifyItemChanged(setLocation);
     }
 
     private RequestManager initGlide() {
@@ -115,8 +113,14 @@ public class MainActivity extends AppCompatActivity {
     public void onDestroy() {
         if (mRecyclerView != null) {
             mRecyclerView.releasePlayer();
-            super.onDestroy();
         }
+        super.onDestroy();
 
+    }
+
+    @Override
+    public void onPause() {
+        if (mRecyclerView != null) mRecyclerView.pausePlayer();
+        super.onPause();
     }
 }

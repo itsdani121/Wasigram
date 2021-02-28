@@ -9,15 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
-import com.google.android.exoplayer2.ui.PlayerView;
 
 public class videoNewsFeed extends RecyclerView.ViewHolder {
     private final View parent;
-    public PlayerView videoView;
     public TextView videoTitle, videoLikes, videoDescription;
     public ImageView volumeControl;
     public RequestManager requestManager;
     public FrameLayout mediaContainer;
+    public int pos;
 
     public videoNewsFeed(@NonNull View itemView) {
         super(itemView);
@@ -35,6 +34,7 @@ public class videoNewsFeed extends RecyclerView.ViewHolder {
         parent.setTag(this);
         videoTitle.setText(model.getTitleName());
         videoDescription.setText(model.getDescription());
+        pos = position;
     }
 }
 
