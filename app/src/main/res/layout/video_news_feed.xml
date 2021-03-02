@@ -2,8 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -14,7 +14,6 @@
         android:src="@drawable/ic_profile"
         app:civ_border_color="@color/black"
         app:civ_border_width="@dimen/_1sdp"
-        app:layout_constraintBottom_toTopOf="@id/item_video_exoplayer"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,22 +25,21 @@
         android:text="@string/app_name"
         android:textColor="@color/black"
         android:textSize="@dimen/_12ssp"
-        app:layout_constraintBottom_toTopOf="@id/item_video_exoplayer"
+        app:layout_constraintBottom_toBottomOf="@id/profile_video_image_news_feed"
         app:layout_constraintStart_toEndOf="@id/profile_video_image_news_feed"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/profile_video_image_news_feed" />
 
 
     <FrameLayout
         android:id="@+id/item_video_exoplayer"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_350sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:background="@color/Grey"
         android:visibility="visible"
-        android:background="#b4b4b4b4"
-        android:scaleType="center"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/profile_video_image_news_feed">
 
         <ImageView
             android:id="@+id/volumeControl"
@@ -50,6 +48,16 @@
             android:layout_gravity="right|bottom"
             android:layout_margin="8dp"
             android:src="@drawable/ic_volume_on"
+            tools:ignore="RtlHardcoded" />
+
+        <ImageView
+            android:id="@+id/heart"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_80sdp"
+            android:layout_gravity="center_horizontal|center"
+            android:layout_margin="8dp"
+            android:alpha="0"
+            android:src="@drawable/avd_instagram_file"
             tools:ignore="RtlHardcoded" />
     </FrameLayout>
 
@@ -104,12 +112,12 @@
         android:text="@string/like"
         android:textColor="@color/black"
         android:textSize="@dimen/_11ssp"
-        app:layout_constraintEnd_toEndOf="@id/profile_video_name_comment_news_feed"
+        app:layout_constraintEnd_toEndOf="@id/profile_video_name_description_news_feed"
         app:layout_constraintStart_toEndOf="@id/profile_video_like_count_news_feed"
         app:layout_constraintTop_toTopOf="@id/profile_video_like_count_news_feed" />
 
     <TextView
-        android:id="@+id/profile_video_name_comment_news_feed"
+        android:id="@+id/profile_video_name_description_news_feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4sdp"
@@ -121,20 +129,64 @@
         app:layout_constraintTop_toBottomOf="@id/profile_video_like_count_news_feed" />
 
     <TextView
-        android:id="@+id/profile_video_comments_news_feed"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/_50sdp"
+        android:id="@+id/profile_video_description_news_feed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:ellipsize="end"
-        android:ems="19"
-        android:justificationMode="inter_word"
         android:maxLines="2"
+        android:paddingStart="@dimen/_8sdp"
+        android:paddingEnd="@dimen/_8sdp"
         android:text="@string/dummy_text"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/_11ssp"
+        android:textSize="@dimen/_12ssp"
         android:textStyle="normal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/profile_video_name_comment_news_feed"
-        app:layout_constraintTop_toTopOf="@id/profile_video_name_comment_news_feed"
+        app:layout_constraintStart_toEndOf="@id/profile_video_name_description_news_feed"
+        app:layout_constraintTop_toTopOf="@id/profile_video_name_description_news_feed"
         tools:ignore="UnusedAttribute" />
+    <TextView
+        android:id="@+id/profile_video_view_more_news_feed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/viewMore"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_22sdp"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:paddingStart="@dimen/_50sdp"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_video_comments_news_feed"
+        app:layout_constraintTop_toTopOf="@id/profile_video_name_description_news_feed"
+         />
+
+    <TextView
+        android:id="@+id/mediaTypes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/profile_video_like_count_news_feed"
+/>
+    <TextView
+        android:id="@+id/profile_video_comments_news_feed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:text="@string/viewComments"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintStart_toStartOf="@id/profile_video_like_count_news_feed"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_video_description_news_feed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

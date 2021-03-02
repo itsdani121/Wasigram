@@ -2,6 +2,8 @@ package com.example.wasigram;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.drawable.AnimatedVectorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -16,8 +18,10 @@ import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 
 import com.bumptech.glide.RequestManager;
 import com.google.android.exoplayer2.C;
@@ -27,6 +31,7 @@ import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
@@ -37,6 +42,8 @@ import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
+import com.pedromassango.doubleclick.DoubleClick;
+import com.pedromassango.doubleclick.DoubleClickListener;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -46,12 +53,15 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private static final String TAG = "ExoPlayerRecyclerView";
     private static final String AppName = "Android ExoPlayer";
     String Json_Url = "https://wasisoft.com/dev/";
+    AnimatedVectorDrawableCompat avd;
+    AnimatedVectorDrawable avd2;
+
     /**
      * PlayerViewHolder UI component
      * <p>
      * Watch PlayerViewHolder class
      */
-    private ImageView mediaCoverImage, volumeControl;
+    private ImageView heartImage, volumeControl, videoLikes;
     private ProgressBar progressBar;
     private View viewHolderParent;
     private FrameLayout mediaContainer;
@@ -72,7 +82,6 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     private RequestManager requestManager;
     // controlling volume state
     private VolumeState volumeState;
-    private final View.OnClickListener videoViewClickListener = v -> toggleVolume();
 
     public ExoPlayerRecyclerView(@NonNull Context context) {
         super(context);
@@ -254,8 +263,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
             if (endPosition - startPosition > 1) {
                 endPosition = startPosition + 1;
             }
-            Log.d(TAG, "playVideo: " + startPosition);
-            Log.d(TAG, "playVideo: " + endPosition);
+
             // something is wrong. return.
             if (startPosition < 0 || endPosition < 0) {
                 return;
@@ -304,21 +312,54 @@ public class ExoPlayerRecyclerView extends RecyclerView {
         viewHolderParent = holder.itemView;
         requestManager = holder.requestManager;
         volumeControl = holder.volumeControl;
+        heartImage = holder.heart;
         position = holder.pos;
+        videoLikes = holder.videoLike;
         mediaContainer = holder.itemView.findViewById(R.id.item_video_exoplayer);
-
+        final Drawable drawable = heartImage.getDrawable();
         videoSurfaceView.setPlayer(videoPlayer);
-        viewHolderParent.setOnClickListener(videoViewClickListener);
-
+        animateLike(drawable);
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(
                 context, Util.getUserAgent(context, AppName));
         String mediaUrl = mediaObjects.get(targetPosition).getVideo();
         if (mediaUrl != null) {
-            MediaSource videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+            MediaSource videoSource = new ExtractorMediaSource.Factory(dataSourceFactory)
                     .createMediaSource(Uri.parse(Json_Url + mediaUrl));
-            videoPlayer.prepare(videoSource,true,true);
+            videoPlayer.prepare(videoSource, true, true);
             videoPlayer.setPlayWhenReady(true);
         }
+    }
+
+    private void animateLike(Drawable drawable) {
+        mediaContainer.setOnClickListener(new DoubleClick(new DoubleClickListener() {
+            @Override
+            public void onSingleClick(View view) {
+                toggleVolume();
+            }
+
+            @Override
+            public void onDoubleClick(View view) {
+                heartImage.setAlpha(0.7f);
+                if (drawable instanceof AnimatedVectorDrawableCompat) {
+                    heartImage.bringToFront();
+                    avd = (AnimatedVectorDrawableCompat) drawable;
+                    avd.start();
+                } else if (drawable instanceof AnimatedVectorDrawable) {
+                    heartImage.bringToFront();
+                    avd2 = (AnimatedVectorDrawable) drawable;
+                    avd2.start();
+                }
+                videoLikes.setImageResource(R.drawable.ic_heart);
+                videoLikes.setColorFilter(ContextCompat.getColor(context, R.color.Red));
+
+            }
+        }));
+
+        videoLikes.setOnClickListener(view -> {
+                videoLikes.setImageResource(R.drawable.ic_like);
+                videoLikes.setColorFilter(ContextCompat.getColor(context, R.color.black));
+
+        });
     }
 
     /**
@@ -384,11 +425,10 @@ public class ExoPlayerRecyclerView extends RecyclerView {
     }
 
     public int setPlayPosition() {
-        Log.d("TAG", "setPlayPosition: "+position);
+        Log.d("TAG", "setPlayPosition: " + position);
 
         return (int) videoPlayer.getCurrentPosition();
     }
-
 
     public void releasePlayer() {
 

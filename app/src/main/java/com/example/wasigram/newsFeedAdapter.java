@@ -34,35 +34,34 @@ public class newsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-      /*  if (viewType == 0) {
+        if (viewType == 0) {
             View view = LayoutInflater.from(context).inflate(R.layout.images_news_feed, parent, false);
             return new imageNewsFeed(view);
         } else {
-*/
             View view = LayoutInflater.from(context).inflate(R.layout.video_news_feed, parent, false);
             return new videoNewsFeed(view);
-       // }
+       }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-       /* if (holder.getItemViewType() == 0) {
+        if (holder.getItemViewType() == 0) {
             newsFeedModel feed = feedModels.get(position);
             ((imageNewsFeed) holder).onBind(feed, position, requestManager);
-        } else {*/
+        } else {
             newsFeedModel model = feedModels.get(position);
             ((videoNewsFeed) holder).onBind(model, position,requestManager);
-        //}
+        }
     // notifyItemChanged(position);
     }
-/*    @Override
+    @Override
     public int getItemViewType(int position) {
-        if (feedModels.get(position).getDescription().contains("picture")) {
+        if (feedModels.get(position).getMediaType().contains("picture")) {
             return imageFeed;
         } else
             return videoFeed;
-    }*/
+    }
 
     @Override
     public int getItemCount() {

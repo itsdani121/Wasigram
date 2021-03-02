@@ -5,26 +5,46 @@ public class newsFeedModel {
     String viewImg;
     String titleName;
     String video;
-    String like;
-    String Descrption;
+    String viewMore;
 
-    public newsFeedModel(String image, String titleName, String video, String like, String descrption) {
+    public String getViewMore() {
+        return viewMore;
+    }
+
+    public void setViewMore(String viewMore) {
+        this.viewMore = viewMore;
+    }
+
+    String like;
+    String mediaType;
+    String Description; 
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    public newsFeedModel(String image, String viewImg, String titleName, String video, String like, String mediaType, String description) {
         this.image = image;
+        this.viewImg = viewImg;
         this.titleName = titleName;
         this.video = video;
         this.like = like;
-        Descrption = descrption;
+        this.mediaType = mediaType;
+        Description = description;
     }
 
     public newsFeedModel() {
     }
 
     public String getDescription() {
-        return Descrption;
+        return Description;
     }
 
-    public void setDescrption(String descrption) {
-        Descrption = descrption;
+    public void setDescrption(String description) {
+        Description = description;
     }
 
     public String getViewImg() {

@@ -34,8 +34,8 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_350sdp"
         android:layout_marginTop="@dimen/_8sdp"
-        android:text="Hello World!"
         android:scaleType="centerCrop"
+        android:text="Hello World!"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_image_images_news_feed" />
@@ -96,7 +96,7 @@
         app:layout_constraintTop_toTopOf="@id/profile_image_like_count_news_feed" />
 
     <TextView
-        android:id="@+id/profile_image_name_comment_news_feed"
+        android:id="@+id/profile_image_name_description_news_feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4sdp"
@@ -108,20 +108,62 @@
         app:layout_constraintTop_toBottomOf="@id/profile_image_like_count_news_feed" />
 
     <TextView
+        android:id="@+id/profile_image_description_news_feed"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:paddingStart="@dimen/_8sdp"
+        android:paddingEnd="@dimen/_8sdp"
+        android:text="@string/dummy_text"
+        android:textColor="@color/text_color"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/profile_image_name_description_news_feed"
+        app:layout_constraintTop_toTopOf="@id/profile_image_name_description_news_feed"
+        tools:ignore="UnusedAttribute" />
+
+    <TextView
         android:id="@+id/profile_image_comments_news_feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:ems="19"
-        android:justificationMode="inter_word"
-        android:maxLines="2"
-        android:text="@string/dummy_text"
-        android:textColor="@color/text_color"
-        android:textSize="@dimen/_11ssp"
-        android:textStyle="normal"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:text="@string/viewComments"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/profile_image_like_count_news_feed"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_description_news_feed" />
+
+    <TextView
+        android:id="@+id/viewMore"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:layout_marginEnd="@dimen/_22sdp"
+        android:paddingStart="@dimen/_50sdp"
+        android:text="@string/viewMore"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/profile_image_name_comment_news_feed"
-        app:layout_constraintTop_toTopOf="@id/profile_image_name_comment_news_feed"
-        tools:ignore="UnusedAttribute" />
+        app:layout_constraintStart_toEndOf="@id/profile_image_comments_news_feed"
+        app:layout_constraintTop_toTopOf="@id/profile_image_name_description_news_feed" />
+
+    <TextView
+        android:id="@+id/mediaTypes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:text="@string/viewComments"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@id/profile_image_like_count_news_feed"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_name_description_news_feed" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

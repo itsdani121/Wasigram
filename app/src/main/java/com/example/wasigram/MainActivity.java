@@ -61,11 +61,20 @@ public class MainActivity extends AppCompatActivity {
                                     newsFeedModel FeedModel = new newsFeedModel();
                                     FeedModel.setTitleName(object.getString("account_name"));
                                     FeedModel.setLike(object.getString("likes"));
-                                    FeedModel.setDescrption(object.getString("media_type"));
+                                    FeedModel.setMediaType(object.getString("media_type"));
                                     FeedModel.setVideo(object.getString("media"));
-                                    // FeedModel.setViewImg(object.getString("media"));
-                                    feedModels.add(FeedModel);
+                                    FeedModel.setViewImg(object.getString("media"));
+                                    String description = object.getString("desc");
+                                    if (description.length() < 66) {
+                                        FeedModel.setDescrption(description);
+                                        FeedModel.setViewMore("");
+                                    } else {
+                                        String desc = description.substring(0, 65) + "...";
+                                        FeedModel.setDescrption(desc);
+                                        FeedModel.setViewMore("View More");
+                                    }
 
+                                    feedModels.add(FeedModel);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -95,10 +104,7 @@ public class MainActivity extends AppCompatActivity {
         imageAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(imageAdapter);
         mRecyclerView.setHasFixedSize(true);
-        int setLocation = mRecyclerView.setPlayPosition();
-        Log.d("TAG", "imageADD: " + setLocation);
         mRecyclerView.setLayoutManager(manager);
-        imageAdapter.notifyItemChanged(setLocation);
     }
 
     private RequestManager initGlide() {
