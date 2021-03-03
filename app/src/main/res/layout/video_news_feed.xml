@@ -105,18 +105,6 @@
         app:layout_constraintTop_toBottomOf="@id/profile_video_like_news_feed" />
 
     <TextView
-        android:id="@+id/profile_video_like_text_news_feed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_4sdp"
-        android:text="@string/like"
-        android:textColor="@color/black"
-        android:textSize="@dimen/_11ssp"
-        app:layout_constraintEnd_toEndOf="@id/profile_video_name_description_news_feed"
-        app:layout_constraintStart_toEndOf="@id/profile_video_like_count_news_feed"
-        app:layout_constraintTop_toTopOf="@id/profile_video_like_count_news_feed" />
-
-    <TextView
         android:id="@+id/profile_video_name_description_news_feed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -132,7 +120,6 @@
         android:id="@+id/profile_video_description_news_feed"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
         android:maxLines="2"
         android:paddingStart="@dimen/_8sdp"
         android:paddingEnd="@dimen/_8sdp"
@@ -144,21 +131,7 @@
         app:layout_constraintStart_toEndOf="@id/profile_video_name_description_news_feed"
         app:layout_constraintTop_toTopOf="@id/profile_video_name_description_news_feed"
         tools:ignore="UnusedAttribute" />
-    <TextView
-        android:id="@+id/profile_video_view_more_news_feed"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/viewMore"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:layout_marginEnd="@dimen/_22sdp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        android:paddingStart="@dimen/_50sdp"
-        android:textSize="@dimen/_12ssp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/profile_video_comments_news_feed"
-        app:layout_constraintTop_toTopOf="@id/profile_video_name_description_news_feed"
-         />
+
 
     <TextView
         android:id="@+id/mediaTypes"

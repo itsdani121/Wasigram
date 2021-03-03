@@ -24,12 +24,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding mainBinding;
     Toolbar toolbar;
     String JSON_URl = "https://wasisoft.com/dev/index.php";
     ArrayList<newsFeedModel> feedModels = new ArrayList<>();
+    String description[];
     newsFeedAdapter imageAdapter;
     ExoPlayerRecyclerView mRecyclerView;
 
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("NewsFeed");
         toolbar.setTitleTextColor(Color.WHITE);
         mRecyclerView = findViewById(R.id.news_feed_recycler);
+
         showList();
 
     }
@@ -55,31 +58,25 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         // do anything with response
                         if (response != null) {
+                            description=new String[response.length()];
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject object = response.getJSONObject(i);
                                     newsFeedModel FeedModel = new newsFeedModel();
                                     FeedModel.setTitleName(object.getString("account_name"));
-                                    FeedModel.setLike(object.getString("likes"));
                                     FeedModel.setMediaType(object.getString("media_type"));
                                     FeedModel.setVideo(object.getString("media"));
                                     FeedModel.setViewImg(object.getString("media"));
-                                    String description = object.getString("desc");
-                                    if (description.length() < 66) {
-                                        FeedModel.setDescrption(description);
-                                        FeedModel.setViewMore("");
-                                    } else {
-                                        String desc = description.substring(0, 65) + "...";
-                                        FeedModel.setDescrption(desc);
-                                        FeedModel.setViewMore("View More");
-                                    }
-
+                                    String like = object.getString("likes");
+                                    FeedModel.setLike(like + " Likes");
+                                    description[i] = object.getString("desc");
+                                    limitDescription(FeedModel,i, description, false);
                                     feedModels.add(FeedModel);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
-                            imageADD(feedModels);
+                            uploadFeedData(feedModels);
                         } else {
                             Toast.makeText(MainActivity.this, "None ", Toast.LENGTH_SHORT).show();
                         }
@@ -93,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    void imageADD(ArrayList<newsFeedModel> feedModel) {
+    void uploadFeedData(ArrayList<newsFeedModel> feedModel) {
         LinearSnapHelper snapHelper = new SnapHelperOneByOne();
         snapHelper.attachToRecyclerView(mRecyclerView);
         //set data object
         mRecyclerView.setMediaObjects(feedModel);
-        imageAdapter = new newsFeedAdapter(this, initGlide(), feedModel);
+        imageAdapter = new newsFeedAdapter(this, initGlide(), feedModel, this::textChangePosition);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setSmoothScrollbarEnabled(true);
         imageAdapter.notifyDataSetChanged();
@@ -107,13 +104,33 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(manager);
     }
 
+    void textChangePosition(newsFeedModel models, int position) {
+        limitDescription(models, position, description,true);
+
+        Log.d("TAG", "textChangePosition: " + position);
+        Log.d("TAG", "textChangePosition: " + description[position]);
+    }
+
+    void limitDescription(newsFeedModel feedModel, int position,
+                          String[] description, boolean isClick) {
+        if (!isClick) {
+            if (description[position].length() < 50) {
+                feedModel.setDescription(description[position]);
+            } else {
+                feedModel.setDescription(description[position].substring(0, 49) + "...more details");
+            }
+        } else {
+            Log.d("TAG", "limitDescription: "+isClick);
+            feedModel.setDescription(description[position]);
+        }
+    }
+
     private RequestManager initGlide() {
         RequestOptions options = new RequestOptions();
 
-        return Glide.with(this)
+        return Glide.with(getApplicationContext())
                 .setDefaultRequestOptions(options);
     }
-
 
     @Override
     public void onDestroy() {

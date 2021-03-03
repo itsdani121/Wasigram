@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
-import com.google.android.exoplayer2.SimpleExoPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class newsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static final int imageFeed = 0;
     public static final int videoFeed = 1;
     Context context;
     ArrayList<newsFeedModel> feedModels;
+    videoCallBack callBack;
     private RequestManager requestManager;
 
-    public newsFeedAdapter(Context context, RequestManager requestManager, ArrayList<newsFeedModel> feedModels) {
+    public newsFeedAdapter(Context context, RequestManager requestManager, ArrayList<newsFeedModel> feedModels, videoCallBack callBack) {
         this.context = context;
         this.feedModels = feedModels;
         this.requestManager = requestManager;
+        this.callBack = callBack;
     }
 
     public newsFeedAdapter() {
@@ -40,7 +40,7 @@ public class newsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else {
             View view = LayoutInflater.from(context).inflate(R.layout.video_news_feed, parent, false);
             return new videoNewsFeed(view);
-       }
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -48,13 +48,14 @@ public class newsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder.getItemViewType() == 0) {
             newsFeedModel feed = feedModels.get(position);
-            ((imageNewsFeed) holder).onBind(feed, position, requestManager);
+            ((imageNewsFeed) holder).onBind(feed, position, requestManager,callBack);
         } else {
             newsFeedModel model = feedModels.get(position);
-            ((videoNewsFeed) holder).onBind(model, position,requestManager);
+            ((videoNewsFeed) holder).onBind(model, position, requestManager,callBack);
         }
-    // notifyItemChanged(position);
+        // notifyItemChanged(position);
     }
+
     @Override
     public int getItemViewType(int position) {
         if (feedModels.get(position).getMediaType().contains("picture")) {

@@ -1,5 +1,9 @@
 package com.example.wasigram;
 
+import android.util.Log;
+
+import static android.content.ContentValues.TAG;
+
 public class newsFeedModel {
     String image;
     String viewImg;
@@ -43,8 +47,11 @@ public class newsFeedModel {
         return Description;
     }
 
-    public void setDescrption(String description) {
-        Description = description;
+    public void setDescription(String description) {
+        Log.d(TAG, "setDescription: "+ this.Description);
+        this.Description = description;
+        Log.d(TAG, "setDescription: "+this.Description);
+
     }
 
     public String getViewImg() {
@@ -52,7 +59,10 @@ public class newsFeedModel {
     }
 
     public void setViewImg(String viewImg) {
+        Log.d(TAG, "setViewImg: "+this.viewImg);
         this.viewImg = viewImg;
+        Log.d(TAG, "setViewImg: "+this.viewImg);
+
     }
 
     public String getLike() {
