@@ -10,6 +10,7 @@ public class newsFeedModel {
     String titleName;
     String video;
     String viewMore;
+    String discriptionLength;
 
     public String getViewMore() {
         return viewMore;
@@ -48,10 +49,7 @@ public class newsFeedModel {
     }
 
     public void setDescription(String description) {
-        Log.d(TAG, "setDescription: "+ this.Description);
         this.Description = description;
-        Log.d(TAG, "setDescription: "+this.Description);
-
     }
 
     public String getViewImg() {
@@ -59,10 +57,7 @@ public class newsFeedModel {
     }
 
     public void setViewImg(String viewImg) {
-        Log.d(TAG, "setViewImg: "+this.viewImg);
         this.viewImg = viewImg;
-        Log.d(TAG, "setViewImg: "+this.viewImg);
-
     }
 
     public String getLike() {

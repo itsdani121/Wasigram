@@ -15,6 +15,7 @@ public class imageNewsFeed extends RecyclerView.ViewHolder {
     ImageView dpImage, viewPager;
     TextView title, likes, description, mediaType;
     String Json_Url = "https://wasisoft.com/dev/";
+    boolean isExpanded = false;
 
     public imageNewsFeed(@NonNull View itemView) {
         super(itemView);
@@ -28,7 +29,7 @@ public class imageNewsFeed extends RecyclerView.ViewHolder {
     }
 
 
-    public void onBind(newsFeedModel feed, int position, RequestManager requestManager,videoCallBack callBack) {
+    public void onBind(newsFeedModel feed, int position, RequestManager requestManager, videoCallBack callBack) {
         this.requestManager = requestManager;
         title.setText(feed.getTitleName());
         likes.setText(feed.getLike());
@@ -40,8 +41,18 @@ public class imageNewsFeed extends RecyclerView.ViewHolder {
                 .centerCrop()
                 .into(viewPager);
         description.setOnClickListener(view -> {
-            callBack.onSuccessPlay(feed,position);
+            if (!isExpanded) {
+                callBack.onSuccessPlay(feed, position);
+                description.setMaxLines(Integer.MAX_VALUE); //As in the android sourcecode
+                description.setEllipsize(null);
+                isExpanded=true;
+            } else {
+                callBack.onSuccessPlay(feed, position);
+                description.setMaxLines(2); //As in the android sourcecode
+                isExpanded=false;
+            }
         });
+
 
     }
 

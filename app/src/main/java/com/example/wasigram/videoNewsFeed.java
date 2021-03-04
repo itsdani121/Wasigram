@@ -1,9 +1,7 @@
 package com.example.wasigram;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,15 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
 
-import static android.content.ContentValues.TAG;
-
 public class videoNewsFeed extends RecyclerView.ViewHolder {
     private final View parent;
-    public TextView videoTitle, videoLikes, videoDescription,mediaTypes;
-    public ImageView volumeControl,heart,videoLike;
+    public TextView videoTitle, videoLikes, videoDescription, mediaTypes;
+    public ImageView volumeControl, heart, videoLike;
     public RequestManager requestManager;
     public FrameLayout mediaContainer;
     public int pos;
+    boolean isExpanded = false;
 
     public videoNewsFeed(@NonNull View itemView) {
         super(itemView);
@@ -38,18 +35,25 @@ public class videoNewsFeed extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("SetTextI18n")
-    public void onBind(newsFeedModel model, int position, RequestManager requestManager,videoCallBack callBack) {
+    public void onBind(newsFeedModel model, int position, RequestManager requestManager, videoCallBack callBack) {
         this.requestManager = requestManager;
         videoLikes.setText(model.getLike());
         parent.setTag(this);
         videoTitle.setText(model.getTitleName());
         videoDescription.setText(model.getDescription());
         mediaTypes.setText(model.getMediaType());
-
         pos = position;
 
         videoDescription.setOnClickListener(view -> {
-            callBack.onSuccessPlay(model,position);
+            if (!isExpanded) {
+                callBack.onSuccessPlay(model, position);
+                videoDescription.setMaxLines(Integer.MAX_VALUE); //As in the android sourcecode
+                isExpanded = true;
+            } else {
+                callBack.onSuccessPlay(model, position);
+                videoDescription.setMaxLines(2); //As in the android sourcecode
+                isExpanded = false;
+            }
         });
 
     }

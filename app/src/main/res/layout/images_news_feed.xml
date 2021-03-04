@@ -102,6 +102,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:maxLines="2"
+        android:ellipsize="end"
         android:justificationMode="inter_word"
         android:paddingStart="@dimen/_8sdp"
         android:paddingEnd="@dimen/_8sdp"

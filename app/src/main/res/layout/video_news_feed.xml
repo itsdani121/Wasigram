@@ -123,6 +123,7 @@
         android:maxLines="2"
         android:paddingStart="@dimen/_8sdp"
         android:paddingEnd="@dimen/_8sdp"
+        android:justificationMode="inter_word"
         android:text="@string/dummy_text"
         android:textColor="@color/text_color"
         android:textSize="@dimen/_12ssp"

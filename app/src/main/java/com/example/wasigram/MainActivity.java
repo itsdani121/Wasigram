@@ -24,7 +24,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding mainBinding;
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(JSONArray response) {
                         // do anything with response
                         if (response != null) {
-                            description=new String[response.length()];
+                            description = new String[response.length()];
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject object = response.getJSONObject(i);
@@ -70,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                                     String like = object.getString("likes");
                                     FeedModel.setLike(like + " Likes");
                                     description[i] = object.getString("desc");
-                                    limitDescription(FeedModel,i, description, false);
+                                    limitDescription(FeedModel, i, description, false);
                                     feedModels.add(FeedModel);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -105,29 +104,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void textChangePosition(newsFeedModel models, int position) {
-        limitDescription(models, position, description,true);
-
-        Log.d("TAG", "textChangePosition: " + position);
-        Log.d("TAG", "textChangePosition: " + description[position]);
+        limitDescription(models, position, description, true);
     }
 
     void limitDescription(newsFeedModel feedModel, int position,
                           String[] description, boolean isClick) {
         if (!isClick) {
+            Log.d("TAG", "limitDescription: if click false");
+
             if (description[position].length() < 50) {
                 feedModel.setDescription(description[position]);
             } else {
-                feedModel.setDescription(description[position].substring(0, 49) + "...more details");
+                feedModel.setDescription(description[position].substring(0, 49) + "more details");
             }
         } else {
-            Log.d("TAG", "limitDescription: "+isClick);
             feedModel.setDescription(description[position]);
+            imageAdapter.notifyItemChanged(position);
+            imageAdapter.notifyDataSetChanged();
+
         }
     }
 
     private RequestManager initGlide() {
         RequestOptions options = new RequestOptions();
-
         return Glide.with(getApplicationContext())
                 .setDefaultRequestOptions(options);
     }
