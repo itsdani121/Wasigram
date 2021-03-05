@@ -1,36 +1,15 @@
 package com.example.wasigram;
 
-import android.util.Log;
-
-import static android.content.ContentValues.TAG;
-
 public class newsFeedModel {
     String image;
+    String userLike;
     String viewImg;
-    String titleName;
+    String titleName, userName, userComments;
     String video;
-    String viewMore;
-    String discriptionLength;
-
-    public String getViewMore() {
-        return viewMore;
-    }
-
-    public void setViewMore(String viewMore) {
-        this.viewMore = viewMore;
-    }
-
+    String viewAllComments;
     String like;
     String mediaType;
-    String Description; 
-    public String getMediaType() {
-        return mediaType;
-    }
-
-    public void setMediaType(String mediaType) {
-        this.mediaType = mediaType;
-    }
-
+    String Description;
     public newsFeedModel(String image, String viewImg, String titleName, String video, String like, String mediaType, String description) {
         this.image = image;
         this.viewImg = viewImg;
@@ -40,8 +19,47 @@ public class newsFeedModel {
         this.mediaType = mediaType;
         Description = description;
     }
-
     public newsFeedModel() {
+    }
+
+    public String getUserLike() {
+        return userLike;
+    }
+
+    public void setUserLike(String userLike) {
+        this.userLike = userLike;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getUserComments() {
+        return userComments;
+    }
+
+    public void setUserComments(String userComments) {
+        this.userComments = userComments;
+    }
+
+    public String getViewAllComments() {
+        return viewAllComments;
+    }
+
+    public void setViewAllComments(String viewAllComments) {
+        this.viewAllComments = viewAllComments;
+    }
+
+    public String getMediaType() {
+        return mediaType;
+    }
+
+    public void setMediaType(String mediaType) {
+        this.mediaType = mediaType;
     }
 
     public String getDescription() {

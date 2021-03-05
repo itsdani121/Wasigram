@@ -2,13 +2,12 @@ package com.example.wasigram;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -33,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     String description[];
     newsFeedAdapter imageAdapter;
     ExoPlayerRecyclerView mRecyclerView;
+    RecyclerView imageRecyclerView, videoRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("NewsFeed");
         toolbar.setTitleTextColor(Color.WHITE);
         mRecyclerView = findViewById(R.id.news_feed_recycler);
+        /* imageRecyclerView = findViewById(R.id.image_comments_list);
+        videoRecyclerView = findViewById(R.id.video_comments_list);*/
 
         showList();
 
@@ -70,12 +72,26 @@ public class MainActivity extends AppCompatActivity {
                                     FeedModel.setLike(like + " Likes");
                                     description[i] = object.getString("desc");
                                     limitDescription(FeedModel, i, description, false);
+                                    JSONObject comments = object.getJSONObject("comments");
+                                    int count = Integer.parseInt(comments.getString("count"));
+                                    FeedModel.setViewAllComments("view all " + count + " comments");
+
+                                   /* commentsListModel model = new commentsListModel();
+                                    JSONArray commentDetails = comments.getJSONArray("comments");
+                                    JSONObject commentObject = commentDetails.getJSONObject(i);
+                                    model.setUserName(commentObject.getString("account_name"));
+                                    model.setUserComments(commentObject.getString("comment"));
+                                    model.setMedia(commentObject.getString("media"));
+                                    model.setUserLike(String.valueOf(R.drawable.ic_like));*/
                                     feedModels.add(FeedModel);
+                                    //listModels.add(model);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
                             uploadFeedData(feedModels);
+                            /*uploadImageComments(listModels);
+                            uploadVideoComments(listModels);*/
                         } else {
                             Toast.makeText(MainActivity.this, "None ", Toast.LENGTH_SHORT).show();
                         }
@@ -90,18 +106,39 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void uploadFeedData(ArrayList<newsFeedModel> feedModel) {
-        LinearSnapHelper snapHelper = new SnapHelperOneByOne();
-        snapHelper.attachToRecyclerView(mRecyclerView);
+
         //set data object
         mRecyclerView.setMediaObjects(feedModel);
         imageAdapter = new newsFeedAdapter(this, initGlide(), feedModel, this::textChangePosition);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setSmoothScrollbarEnabled(true);
+        mRecyclerView.setLayoutManager(manager);
         imageAdapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(imageAdapter);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(manager);
     }
+/*
+    void uploadImageComments(ArrayList<commentsListModel> feedModel) {
+        //set data object
+        listAdapter = new commentListAdapter(this, feedModel);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setSmoothScrollbarEnabled(true);
+        listAdapter.notifyDataSetChanged();
+        imageRecyclerView.setAdapter(listAdapter);
+        imageRecyclerView.setHasFixedSize(true);
+        imageRecyclerView.setLayoutManager(manager);
+    }
+
+    void uploadVideoComments(ArrayList<commentsListModel> feedModel) {
+        //set data object
+        listAdapter = new commentListAdapter(this, feedModel);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        manager.setSmoothScrollbarEnabled(true);
+        listAdapter.notifyDataSetChanged();
+        videoRecyclerView.setAdapter(listAdapter);
+        videoRecyclerView.setHasFixedSize(true);
+        videoRecyclerView.setLayoutManager(manager);
+    }*/
 
     void textChangePosition(newsFeedModel models, int position) {
         limitDescription(models, position, description, true);
@@ -110,18 +147,15 @@ public class MainActivity extends AppCompatActivity {
     void limitDescription(newsFeedModel feedModel, int position,
                           String[] description, boolean isClick) {
         if (!isClick) {
-            Log.d("TAG", "limitDescription: if click false");
-
             if (description[position].length() < 50) {
                 feedModel.setDescription(description[position]);
             } else {
-                feedModel.setDescription(description[position].substring(0, 49) + "more details");
+                feedModel.setDescription(description[position].substring(0, 49) + "...more details");
             }
         } else {
             feedModel.setDescription(description[position]);
             imageAdapter.notifyItemChanged(position);
             imageAdapter.notifyDataSetChanged();
-
         }
     }
 
@@ -137,7 +171,6 @@ public class MainActivity extends AppCompatActivity {
             mRecyclerView.releasePlayer();
         }
         super.onDestroy();
-
     }
 
     @Override

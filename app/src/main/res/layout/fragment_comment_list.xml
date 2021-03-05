@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@color/white"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".commentListFragment">
 
+    <!-- TODO: Update blank fragment layout -->
     <include
-        android:id="@+id/mews_feed_toolbar"
+        android:id="@+id/comments_list_toolbar"
         layout="@layout/toolbar_layout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-    <com.example.wasigram.ExoPlayerRecyclerView
-        android:id="@+id/news_feed_recycler"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/video_comments_list_recycler"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_4sdp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/mews_feed_toolbar"
-        />
+        app:layout_constraintTop_toBottomOf="@id/comments_list_toolbar"
+        tools:listitem="@layout/video_comments_list" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

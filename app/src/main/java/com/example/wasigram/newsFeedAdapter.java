@@ -48,10 +48,10 @@ public class newsFeedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder.getItemViewType() == 0) {
             newsFeedModel feed = feedModels.get(position);
-            ((imageNewsFeed) holder).onBind(feed, position, requestManager,callBack);
+            ((imageNewsFeed) holder).onBind(context,feed, position, requestManager,callBack);
         } else {
             newsFeedModel model = feedModels.get(position);
-            ((videoNewsFeed) holder).onBind(model, position, requestManager,callBack);
+            ((videoNewsFeed) holder).onBind(context,model, position, requestManager,callBack);
         }
         // notifyItemChanged(position);
     }
