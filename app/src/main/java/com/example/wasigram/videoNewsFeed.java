@@ -2,22 +2,22 @@ package com.example.wasigram;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
+import android.content.Intent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
+
 public class videoNewsFeed extends RecyclerView.ViewHolder {
     private final View parent;
-    public TextView videoTitle, videoLikes, videoDescription, mediaTypes, viewComments;
+    public TextView videoTitle, videoLikes, videoDescription, mediaTypes, viewComments, userID,videoDateSnap;
     public ImageView volumeControl, heart, videoLike;
     public RequestManager requestManager;
     public FrameLayout mediaContainer;
@@ -30,7 +30,9 @@ public class videoNewsFeed extends RecyclerView.ViewHolder {
         mediaContainer = itemView.findViewById(R.id.item_video_exoplayer);
         volumeControl = itemView.findViewById(R.id.volumeControl);
         heart = itemView.findViewById(R.id.heart);
+        userID = itemView.findViewById(R.id.users_id);
         mediaTypes = itemView.findViewById(R.id.mediaTypes);
+        videoDateSnap = itemView.findViewById(R.id.videoDateSnap);
         viewComments = itemView.findViewById(R.id.profile_video_comments_news_feed);
         videoLike = itemView.findViewById(R.id.profile_video_like_news_feed);
         videoTitle = itemView.findViewById(R.id.profile_video_name_news_feed);
@@ -43,6 +45,8 @@ public class videoNewsFeed extends RecyclerView.ViewHolder {
         this.requestManager = requestManager;
         videoLikes.setText(model.getLike());
         parent.setTag(this);
+        userID.setText(model.getUserId());
+        videoDateSnap.setText(model.getDateSnap());
         videoTitle.setText(model.getTitleName());
         videoDescription.setText(model.getDescription());
         mediaTypes.setText(model.getMediaType());
@@ -60,7 +64,17 @@ public class videoNewsFeed extends RecyclerView.ViewHolder {
                 isExpanded = false;
             }
         });
+        viewComments.setOnClickListener(view -> {
+            moveActivity(context, model.getUserId());
+        });
 
+    }
+
+    void moveActivity(Context context, String id) {
+        Intent myactivity = new Intent(context.getApplicationContext(), activity_to_fragment.class);
+        myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        myactivity.putExtra("post_id", id);
+        context.getApplicationContext().startActivity(myactivity);
     }
 }
 

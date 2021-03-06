@@ -144,8 +144,8 @@
         android:textSize="@dimen/_11ssp"
         android:textStyle="bold"
         android:visibility="invisible"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="@id/profile_video_like_count_news_feed" />
+        app:layout_constraintStart_toStartOf="@id/profile_video_like_count_news_feed"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/profile_video_comments_news_feed"
@@ -159,13 +159,34 @@
         app:layout_constraintStart_toStartOf="@id/profile_video_like_count_news_feed"
         app:layout_constraintTop_toBottomOf="@id/profile_video_description_news_feed" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/video_comments_list"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_20sdp"
+
+    <TextView
+        android:id="@+id/users_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_4sdp"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="bold"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="@id/profile_video_like_count_news_feed"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/videoDateSnap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="normal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/profile_video_comments_news_feed"
-        tools:listitem="@layout/video_comments_list" />
+        app:layout_constraintStart_toStartOf="@id/profile_video_like_count_news_feed"
+        app:layout_constraintTop_toBottomOf="@id/profile_video_comments_news_feed" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

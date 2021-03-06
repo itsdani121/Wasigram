@@ -52,7 +52,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
 
     private static final String TAG = "ExoPlayerRecyclerView";
     private static final String AppName = "Android ExoPlayer";
-    String Json_Url = "https://wasisoft.com/dev/";
+    String Json_Url = ApiUrl.media;
     AnimatedVectorDrawableCompat avd;
     AnimatedVectorDrawable avd2;
 
@@ -327,6 +327,7 @@ public class ExoPlayerRecyclerView extends RecyclerView {
                     .createMediaSource(Uri.parse(Json_Url + mediaUrl));
             videoPlayer.prepare(videoSource, true, true);
             videoPlayer.setPlayWhenReady(true);
+            Log.d(TAG, "playVideo: "+Json_Url+mediaUrl);
         }
     }
 

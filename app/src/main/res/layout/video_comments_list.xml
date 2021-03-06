@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/_8sdp"
-    android:layout_marginTop="@dimen/_4sdp"
-    android:layout_marginBottom="@dimen/_8sdp">
+    android:layout_marginBottom="@dimen/_4sdp">
 
     <TextView
         android:id="@+id/profile_video_comment_user_name"
@@ -34,19 +33,42 @@
         android:textStyle="normal"
         app:layout_constraintEnd_toStartOf="@id/profile_video_comments_user_like"
         app:layout_constraintStart_toEndOf="@id/profile_video_comment_user_name"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/profile_video_comment_user_name"
         tools:ignore="UnusedAttribute" />
 
     <ImageView
         android:id="@+id/profile_video_comments_user_like"
         android:layout_width="@dimen/_14sdp"
-        android:layout_height="@dimen/_14sdp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_4sdp"
         android:layout_marginEnd="@dimen/_12sdp"
         android:src="@drawable/ic_like"
-        app:layout_constraintBottom_toBottomOf="@id/profile_video_user_comments_details"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/profile_video_user_comments_details"
-        app:layout_constraintTop_toTopOf="@id/profile_video_user_comments_details" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/Grey" />
 
+    <TextView
+        android:id="@+id/media"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:text="@string/viewComments"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/user_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:text="@string/viewComments"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_12ssp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

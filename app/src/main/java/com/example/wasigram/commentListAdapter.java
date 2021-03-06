@@ -41,6 +41,8 @@ public class commentListAdapter extends RecyclerView.Adapter<commentListAdapter.
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         commentsListModel model = feedModels.get(position);
         holder.userName.setText(model.getUserName());
+        holder.media.setText(model.getMedia());
+        holder.userId.setText(model.getId());
         holder.userComments.setText(model.getUserComments());
         holder.userLikes.setOnClickListener(view -> {
             if (!isExpanded) {
@@ -61,8 +63,8 @@ public class commentListAdapter extends RecyclerView.Adapter<commentListAdapter.
     }
 
 
-    private static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView userComments, userName;
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView userComments, userName, media, userId;
         ImageView userLikes;
 
         public MyViewHolder(View view) {
@@ -70,6 +72,8 @@ public class commentListAdapter extends RecyclerView.Adapter<commentListAdapter.
             userLikes = view.findViewById(R.id.profile_video_comments_user_like);
             userComments = view.findViewById(R.id.profile_video_user_comments_details);
             userName = view.findViewById(R.id.profile_video_comment_user_name);
+            media = view.findViewById(R.id.media);
+            userId = view.findViewById(R.id.user_id);
         }
     }
 }

@@ -18,9 +18,9 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class imageNewsFeed extends RecyclerView.ViewHolder {
     public RequestManager requestManager;
-    ImageView dpImage, viewPager, userLikes;
-    TextView title, likes, description, mediaType, viewComments;
-    String Json_Url = "https://wasisoft.com/dev/";
+    ImageView dpImage, viewPager;
+    TextView title, likes, description, mediaType, viewComments,userID;
+    String Json_Url = ApiUrl.media;
     boolean isExpanded = false;
 
     public imageNewsFeed(@NonNull View itemView) {
@@ -29,6 +29,7 @@ public class imageNewsFeed extends RecyclerView.ViewHolder {
         viewPager = itemView.findViewById(R.id.profile_image_viewPage_news_feed);
         title = itemView.findViewById(R.id.profile_image_name_news_feed);
         mediaType = itemView.findViewById(R.id.mediaTypes);
+        userID = itemView.findViewById(R.id.user_ids);
         likes = itemView.findViewById(R.id.profile_image_like_count_news_feed);
         description = itemView.findViewById(R.id.profile_image_description_news_feed);
         viewComments = itemView.findViewById(R.id.profile_image_comments_news_feed);
@@ -40,6 +41,7 @@ public class imageNewsFeed extends RecyclerView.ViewHolder {
         this.requestManager = requestManager;
         title.setText(feed.getTitleName());
         likes.setText(feed.getLike());
+        userID.setText(feed.getUserId());
         mediaType.setText(feed.getMediaType());
         description.setText(feed.getDescription());
         viewComments.setText(feed.getViewAllComments());
@@ -62,14 +64,15 @@ public class imageNewsFeed extends RecyclerView.ViewHolder {
         });
 
         viewComments.setOnClickListener(view -> {
-            moveActivity(context);
+            moveActivity(context,feed.getUserId());
         });
 
     }
 
-    void moveActivity(Context context) {
+    void moveActivity(Context context, String id) {
         Intent myactivity = new Intent(context.getApplicationContext(), activity_to_fragment.class);
         myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
+        myactivity.putExtra("post_id",id);
         context.getApplicationContext().startActivity(myactivity);
     }
 

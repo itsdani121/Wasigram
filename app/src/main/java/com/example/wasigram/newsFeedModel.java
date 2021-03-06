@@ -4,8 +4,10 @@ public class newsFeedModel {
     String image;
     String userLike;
     String viewImg;
+    String dateSnap;
     String titleName, userName, userComments;
     String video;
+    String userId;
     String viewAllComments;
     String like;
     String mediaType;
@@ -20,6 +22,22 @@ public class newsFeedModel {
         Description = description;
     }
     public newsFeedModel() {
+    }
+
+    public String getDateSnap() {
+        return dateSnap;
+    }
+
+    public void setDateSnap(String dateSnap) {
+        this.dateSnap = dateSnap;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserLike() {

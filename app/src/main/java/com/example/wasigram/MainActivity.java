@@ -1,5 +1,6 @@
 package com.example.wasigram;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -7,7 +8,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.common.Priority;
@@ -17,22 +17,27 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.wasigram.databinding.ActivityMainBinding;
+import com.github.marlonlom.utilities.timeago.TimeAgo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    @SuppressLint("SimpleDateFormat")
+    public static final SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     ActivityMainBinding mainBinding;
     Toolbar toolbar;
-    String JSON_URl = "https://wasisoft.com/dev/index.php";
+    String JSON_URl = ApiUrl.posts;
     ArrayList<newsFeedModel> feedModels = new ArrayList<>();
     String description[];
     newsFeedAdapter imageAdapter;
     ExoPlayerRecyclerView mRecyclerView;
-    RecyclerView imageRecyclerView, videoRecyclerView;
+
+    long timeInMillis = System.currentTimeMillis();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,49 +69,40 @@ public class MainActivity extends AppCompatActivity {
                                 try {
                                     JSONObject object = response.getJSONObject(i);
                                     newsFeedModel FeedModel = new newsFeedModel();
-                                    FeedModel.setTitleName(object.getString("account_name"));
+                                    FeedModel.setTitleName(object.getString("name"));
+                                    FeedModel.setUserId(object.getString("id"));
                                     FeedModel.setMediaType(object.getString("media_type"));
-                                    FeedModel.setVideo(object.getString("media"));
-                                    FeedModel.setViewImg(object.getString("media"));
-                                    String like = object.getString("likes");
-                                    FeedModel.setLike(like + " Likes");
-                                    description[i] = object.getString("desc");
-                                    limitDescription(FeedModel, i, description, false);
-                                    JSONObject comments = object.getJSONObject("comments");
-                                    int count = Integer.parseInt(comments.getString("count"));
+                                    FeedModel.setVideo(object.getString("media_url"));
+                                    FeedModel.setViewImg(object.getString("media_url"));
+                                    String dates = object.getString("created_at");
+                                    String text = TimeAgo.using(timeInMillis);
+                                    FeedModel.setDateSnap(text);
+                                    String like = object.getString("likes_count");
+                                    int count = Integer.parseInt(object.getString("comments_count"));
                                     FeedModel.setViewAllComments("view all " + count + " comments");
-
-                                   /* commentsListModel model = new commentsListModel();
-                                    JSONArray commentDetails = comments.getJSONArray("comments");
-                                    JSONObject commentObject = commentDetails.getJSONObject(i);
-                                    model.setUserName(commentObject.getString("account_name"));
-                                    model.setUserComments(commentObject.getString("comment"));
-                                    model.setMedia(commentObject.getString("media"));
-                                    model.setUserLike(String.valueOf(R.drawable.ic_like));*/
+                                    FeedModel.setLike(like + " Likes");
+                                    description[i] = object.getString("description");
+                                    limitDescription(FeedModel, i, description, false);
                                     feedModels.add(FeedModel);
-                                    //listModels.add(model);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
                             uploadFeedData(feedModels);
-                            /*uploadImageComments(listModels);
-                            uploadVideoComments(listModels);*/
                         } else {
-                            Toast.makeText(MainActivity.this, "None ", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "Empty posts ", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onError(ANError error) {
-                        // handle error
                         Toast.makeText(MainActivity.this, "No Value " + error.getErrorBody(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    void uploadFeedData(ArrayList<newsFeedModel> feedModel) {
 
+    void uploadFeedData(ArrayList<newsFeedModel> feedModel) {
         //set data object
         mRecyclerView.setMediaObjects(feedModel);
         imageAdapter = new newsFeedAdapter(this, initGlide(), feedModel, this::textChangePosition);
@@ -117,28 +113,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(imageAdapter);
         mRecyclerView.setHasFixedSize(true);
     }
-/*
-    void uploadImageComments(ArrayList<commentsListModel> feedModel) {
-        //set data object
-        listAdapter = new commentListAdapter(this, feedModel);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setSmoothScrollbarEnabled(true);
-        listAdapter.notifyDataSetChanged();
-        imageRecyclerView.setAdapter(listAdapter);
-        imageRecyclerView.setHasFixedSize(true);
-        imageRecyclerView.setLayoutManager(manager);
-    }
-
-    void uploadVideoComments(ArrayList<commentsListModel> feedModel) {
-        //set data object
-        listAdapter = new commentListAdapter(this, feedModel);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        manager.setSmoothScrollbarEnabled(true);
-        listAdapter.notifyDataSetChanged();
-        videoRecyclerView.setAdapter(listAdapter);
-        videoRecyclerView.setHasFixedSize(true);
-        videoRecyclerView.setLayoutManager(manager);
-    }*/
 
     void textChangePosition(newsFeedModel models, int position) {
         limitDescription(models, position, description, true);

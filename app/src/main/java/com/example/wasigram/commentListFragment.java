@@ -2,6 +2,7 @@ package com.example.wasigram;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,13 +26,16 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import static android.content.ContentValues.TAG;
+
 public class commentListFragment extends Fragment {
 
     ArrayList<commentsListModel> listModels = new ArrayList<>();
     commentListAdapter listAdapter;
-    String JSON_URl = "https://wasisoft.com/dev/index.php";
+    String JSON_URl = ApiUrl.posts;
     FragmentCommentListBinding commentListBinding;
     Toolbar toolbar;
+    String post_id ;
 
     public commentListFragment() {
         // Required empty public constructor
@@ -55,12 +59,21 @@ public class commentListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
+        valuesDefault();
         showList();
     }
 
+    void valuesDefault() {
+
+        Bundle bundle = this.getArguments();
+        if (bundle != null) {
+            post_id = bundle.getString("post_id");
+        }
+    }
+
     void showList() {
-        AndroidNetworking.get(JSON_URl)
+
+        AndroidNetworking.get(JSON_URl + post_id + ApiUrl.comments)
                 .setPriority(Priority.LOW)
                 .build()
                 .getAsJSONArray(new JSONArrayRequestListener() {
@@ -71,38 +84,21 @@ public class commentListFragment extends Fragment {
                             for (int i = 0; i < response.length(); i++) {
                                 try {
                                     JSONObject object = response.getJSONObject(i);
-                                   /* newsFeedModel FeedModel = new newsFeedModel();
-                                    FeedModel.setTitleName(object.getString("account_name"));
-                                    FeedModel.setMediaType(object.getString("media_type"));
-                                    FeedModel.setVideo(object.getString("media"));
-                                    FeedModel.setViewImg(object.getString("media"));
-                                    String like = object.getString("likes");
-                                    FeedModel.setLike(like + " Likes");
-                                    description[i] = object.getString("desc");
-                                    limitDescription(FeedModel, i, description, false);
-                                    int count = Integer.parseInt(comments.getString("count"));
-                                    FeedModel.setViewAllComments("view all " + count + " comments");*/
-                                    JSONObject comments = object.getJSONObject("comments");
                                     commentsListModel model = new commentsListModel();
-                                    JSONArray commentDetails = comments.getJSONArray("comments");
-                                    JSONObject commentObject = commentDetails.getJSONObject(i);
-                                    model.setUserName(commentObject.getString("account_name"));
-                                    model.setUserComments(commentObject.getString("comment"));
-                                    model.setMedia(commentObject.getString("media"));
-                                    model.setUserLike(String.valueOf(R.drawable.ic_like));
+                                    model.setUserName(object.getString("username"));
+                                    model.setUserComments(object.getString("comment"));
                                     listModels.add(model);
-                                    //listModels.add(model);
+
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
                             uploadFeedData(listModels);
-                            /*uploadImageComments(listModels);
-                            uploadVideoComments(listModels);*/
                         } else {
                             Toast.makeText(requireActivity(), "None ", Toast.LENGTH_SHORT).show();
                         }
                     }
+
                     @Override
                     public void onError(ANError error) {
                         // handle error
@@ -117,9 +113,9 @@ public class commentListFragment extends Fragment {
         LinearLayoutManager manager = new LinearLayoutManager(requireContext());
         manager.setSmoothScrollbarEnabled(true);
         commentListBinding.videoCommentsListRecycler.setLayoutManager(manager);
-        listAdapter.notifyDataSetChanged();
         commentListBinding.videoCommentsListRecycler.setAdapter(listAdapter);
         commentListBinding.videoCommentsListRecycler.setHasFixedSize(true);
+        listAdapter.notifyDataSetChanged();
     }
 
 }

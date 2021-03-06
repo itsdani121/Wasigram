@@ -56,4 +56,5 @@ dependencies {
     //Ribbon View
     implementation "com.github.skydoves:androidribbon:1.0.3"
     implementation 'com.github.pedromassango:doubleClick:3.0'//for double clickListener
+    compile 'com.github.marlonlom:timeago:4.0.3'//for date time snap
 }
