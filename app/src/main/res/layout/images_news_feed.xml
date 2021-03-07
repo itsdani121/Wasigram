@@ -148,10 +148,26 @@
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/imageDateSnap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_4sdp"
+        android:gravity="center_horizontal"
+        android:text="@string/app_name"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_11ssp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@id/profile_image_like_count_news_feed"
+        app:layout_constraintTop_toBottomOf="@id/profile_image_comments_news_feed" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/image_comments_list"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_20sdp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/profile_image_comments_news_feed"

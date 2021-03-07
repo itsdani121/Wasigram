@@ -13,7 +13,6 @@ public class MyApp extends Application {
         return instance;
     }
 
-
     public Context getAppContext() {
         return instance.getApplicationContext();
     }
@@ -22,8 +21,8 @@ public class MyApp extends Application {
     public void onCreate() {
         super.onCreate();
             instance=this;
-
     }
+
     @Override
     public void onTrimMemory(int level) {
         super.onTrimMemory(level);
@@ -32,4 +31,5 @@ public class MyApp extends Application {
             PlayerProviderImpl.getInstance(this).release();
         }
     }
+
 }

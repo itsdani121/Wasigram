@@ -19,7 +19,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 public class imageNewsFeed extends RecyclerView.ViewHolder {
     public RequestManager requestManager;
     ImageView dpImage, viewPager;
-    TextView title, likes, description, mediaType, viewComments,userID;
+    TextView title, likes, description, mediaType, viewComments,userID,imageDateSnap;
     String Json_Url = ApiUrl.media;
     boolean isExpanded = false;
 
@@ -30,6 +30,7 @@ public class imageNewsFeed extends RecyclerView.ViewHolder {
         title = itemView.findViewById(R.id.profile_image_name_news_feed);
         mediaType = itemView.findViewById(R.id.mediaTypes);
         userID = itemView.findViewById(R.id.user_ids);
+        imageDateSnap = itemView.findViewById(R.id.imageDateSnap);
         likes = itemView.findViewById(R.id.profile_image_like_count_news_feed);
         description = itemView.findViewById(R.id.profile_image_description_news_feed);
         viewComments = itemView.findViewById(R.id.profile_image_comments_news_feed);
@@ -45,6 +46,7 @@ public class imageNewsFeed extends RecyclerView.ViewHolder {
         mediaType.setText(feed.getMediaType());
         description.setText(feed.getDescription());
         viewComments.setText(feed.getViewAllComments());
+        imageDateSnap.setText(feed.getDateSnap());
 
         this.requestManager
                 .load(Json_Url + feed.getViewImg())

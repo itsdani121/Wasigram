@@ -3,12 +3,15 @@ package com.example.wasigram;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.RequestManager;
@@ -17,7 +20,7 @@ import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class videoNewsFeed extends RecyclerView.ViewHolder {
     private final View parent;
-    public TextView videoTitle, videoLikes, videoDescription, mediaTypes, viewComments, userID,videoDateSnap;
+    public TextView videoTitle, videoLikes, videoDescription, mediaTypes, viewComments, userID, videoDateSnap;
     public ImageView volumeControl, heart, videoLike;
     public RequestManager requestManager;
     public FrameLayout mediaContainer;
@@ -65,7 +68,7 @@ public class videoNewsFeed extends RecyclerView.ViewHolder {
             }
         });
         viewComments.setOnClickListener(view -> {
-            moveActivity(context, model.getUserId());
+            run(context, new commentListFragment(), model.getUserId());
         });
 
     }
@@ -75,6 +78,28 @@ public class videoNewsFeed extends RecyclerView.ViewHolder {
         myactivity.addFlags(FLAG_ACTIVITY_NEW_TASK);
         myactivity.putExtra("post_id", id);
         context.getApplicationContext().startActivity(myactivity);
+    }
+
+    private void run(Context context, Fragment fragment, String s) {
+        AppCompatActivity activity = (AppCompatActivity) context;
+        Bundle bundle = new Bundle();
+        bundle.putString("post_id", s);
+        fragment.setArguments(bundle);
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragments, fragment)
+                .commit();
+
+
+    }
+
+    private void moveFrag(Context context, Fragment Fragment) {
+        AppCompatActivity activity = (AppCompatActivity) context;
+        activity.getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragments, Fragment)
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
     }
 }
 
