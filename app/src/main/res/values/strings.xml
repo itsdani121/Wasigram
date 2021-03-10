@@ -11,4 +11,11 @@
     <string name="search">search</string>
     <string name="addvalue">addValue</string>
     <string name="profile">profile</string>
+    <string name="status">Profile Status</string>
+    <string name="counter">2</string>
+    <string name="posts">Posts</string>
+    <string name="followers">Followers</string>
+    <string name="following">Following</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="saved">Saved</string>
 </resources>
